@@ -1,3 +1,4 @@
+import { login } from "@/auth-lib";
 import { apiPost, apiGet } from "../database";
 import { migrate } from "../migrations";
 
@@ -13,19 +14,13 @@ export async function POST(req: Request) {
   `;
   const values = [address];
 
-  let status, respBody;
-  await apiPost(query, values)
-    .then(() => {
-      status = 200;
-      respBody = { message: "Successfully created user" };
-    })
-    .catch((err) => {
-      status = 400;
-      respBody = err;
-    });
-  return Response.json(respBody, {
-    status,
-  });
+  try {
+    await apiPost(query, values);
+    await login(address);
+    return Response.json({ address }, { status: 200 });
+  } catch (err) {
+    return Response.json(err, { status: 400 });
+  }
 }
 
 export async function GET() {

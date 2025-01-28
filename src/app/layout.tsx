@@ -40,8 +40,7 @@ export default async function RootLayout({
             Dash
           </a>
         </nav>
-        <div></div>
-        <AppKitProvider cookies={cookie}>
+        <AppKitProvider cookies={decodeURIComponent(cookie || "")}>
           <main className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
             {children}
           </main>
